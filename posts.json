@@ -1,0 +1,104 @@
+[
+  {
+    "id": "legacy-cinden-ithalat",
+    "title": "Çin'den İthalat Nasıl Yapılır? Adım Adım Başlangıç Rehberi",
+    "slug": "cinden-ithalat-nasil-yapilir",
+    "category": "İthalat",
+    "readTime": "12 dk okuma",
+    "date": "2026-03-28",
+    "excerpt": "Çin'den ithalat sürecinde ürün seçimi, supplier doğrulama, GTİP, ödeme ve ilk sevkiyat planını adım adım anlatan kapsamlı rehber.",
+    "points": [
+      "Ürün ve mevzuat çerçevesi nasıl kurulur",
+      "Supplier seçerken hangi sinyaller okunur",
+      "İlk sevkiyat öncesi hangi kararlar netleşmeli"
+    ],
+    "legacyUrl": "cinden-ithalat-nasil-yapilir.html",
+    "bodyHtml": "",
+    "status": "published"
+  },
+  {
+    "id": "legacy-gtip",
+    "title": "GTİP Nasıl Bulunur? Yanlış Sınıflandırmanın 5 Maliyeti",
+    "slug": "gtip-nasil-bulunur",
+    "category": "GTİP",
+    "readTime": "10 dk okuma",
+    "date": "2026-03-28",
+    "excerpt": "GTİP kararının maliyet, belge ve süreç üzerindeki etkisini netleştiren detaylı sınıflandırma rehberi.",
+    "points": [
+      "Doğru ürün tanımı olmadan sağlıklı kod bulunamaz",
+      "Yanlış sınıflandırma kârlılığı ve süreyi bozar",
+      "İlk araştırmada hangi veri seti toplanmalı"
+    ],
+    "legacyUrl": "gtip-nasil-bulunur.html",
+    "bodyHtml": "",
+    "status": "published"
+  },
+  {
+    "id": "legacy-supplier",
+    "title": "Tedarikçi Doğrulama Nasıl Yapılır? Supplier Risk Kontrol Listesi",
+    "slug": "tedarikci-dogrulama",
+    "category": "Supplier",
+    "readTime": "11 dk okuma",
+    "date": "2026-03-28",
+    "excerpt": "Supplier doğrulama sürecinde firma izi, teklif kalitesi, numune disiplini ve ödeme güvenliğini nasıl değerlendireceğinizi anlatan rehber.",
+    "points": [
+      "Şirketin ticari izleri ve ürün uyumu nasıl okunur",
+      "Numune süreci supplier karakterini nasıl gösterir",
+      "Ödeme öncesi görülmesi gereken kırmızı bayraklar"
+    ],
+    "legacyUrl": "tedarikci-dogrulama.html",
+    "bodyHtml": "",
+    "status": "published"
+  },
+  {
+    "id": "legacy-incoterms",
+    "title": "Incoterms Nedir? EXW, FOB ve CIF Seçerken Nelere Dikkat Etmeli?",
+    "slug": "incoterms-nedir",
+    "category": "Lojistik",
+    "readTime": "9 dk okuma",
+    "date": "2026-03-28",
+    "excerpt": "Teslim şekli kararının maliyet, kontrol ve sorumluluk üzerindeki etkisini sade şekilde anlatan karşılaştırmalı rehber.",
+    "points": [
+      "EXW, FOB ve CIF arasındaki temel sorumluluk farkları",
+      "İlk sevkiyatta kontrol kapasitesi neden önemlidir",
+      "Teslim modeli seçerken görünmeyen maliyetler nasıl okunur"
+    ],
+    "legacyUrl": "incoterms-nedir.html",
+    "bodyHtml": "",
+    "status": "published"
+  },
+  {
+    "id": "legacy-ihracat-belge",
+    "title": "İhracata Başlamak İçin Gerekli Belgeler Nelerdir? İlk Sevkiyat Rehberi",
+    "slug": "ihracat-icin-gerekli-belgeler",
+    "category": "İhracat",
+    "readTime": "12 dk okuma",
+    "date": "2026-03-28",
+    "excerpt": "İlk ihracat sevkiyatında hangi belgelerin ne işe yaradığını ve belge akışının nasıl kurulacağını anlatan detaylı rehber.",
+    "points": [
+      "Temel belge mantığı ve akış tasarımı",
+      "Ülke ve ürün bazlı ek belge ihtiyacı nasıl anlaşılır",
+      "İlk sevkiyatta ekip sorumluluğu nasıl netleşir"
+    ],
+    "legacyUrl": "ihracat-icin-gerekli-belgeler.html",
+    "bodyHtml": "",
+    "status": "published"
+  },
+  {
+    "id": "managed-ilk-ithalat-butce",
+    "title": "İlk İthalat Bütçesi Nasıl Hesaplanır? Hızlı Planlama Rehberi",
+    "slug": "ilk-ithalat-butcesi-nasil-hesaplanir",
+    "category": "Maliyet",
+    "readTime": "8 dk okuma",
+    "date": "2026-03-29",
+    "excerpt": "İlk ithalat planında ürün, navlun, vergi, yerel gider ve kur stresini birlikte ele alarak gerçekçi bütçe çıkarmak için hazırlanan kısa rehber.",
+    "points": [
+      "Sadece ürün fiyatına bakmak neden yanıltıcıdır",
+      "Vergi ve yerel gider tamponu nasıl kurulur",
+      "Kur stresi için basit bir güvenlik hesabı nasıl yapılır"
+    ],
+    "legacyUrl": "",
+    "bodyHtml": "<p class='article-intro'>İlk ithalat bütçesi çıkarırken yapılan en büyük hata, yalnızca ürün fiyatına bakmaktır. Oysa gerçek maliyet; navlun, sigorta, vergi, müşavirlik, ardiye, yurtiçi nakliye ve kur sapmasıyla birlikte oluşur. Sağlıklı karar için bütün kalemleri aynı tabloda görmek gerekir.</p><h2 id='urun-bedeli'>1. Ürün bedeli sadece başlangıçtır</h2><p>Supplier teklifinde gördüğünüz rakam, kararın yalnızca ilk katmanıdır. Ürün fiyatı iyi görünse bile taşıma, vergi ve yerel operasyon yükü sonradan marjı eritebilir. Bu yüzden ürün bedelini tek başına kârlılık göstergesi gibi okumamak gerekir.</p><p>Özellikle ilk sevkiyatta küçük görünen kalemler birleştiğinde sürpriz maliyet yaratır. Sağlıklı yaklaşım, ürün bedelini bütçe tablosunun ilk satırı olarak görüp geri kalan maliyet halkalarını onun üstüne eklemektir.</p><h2 id='vergi-ve-lojistik'>2. Vergi ve lojistik kalemleri erkenden görünür hale getirin</h2><p>Navlun, sigorta, gümrük vergisi, ilave vergi ve KDV gibi başlıklar sonradan hesaplanacak detaylar değildir. Bunlar, ürün seçiminden itibaren karar kalitesini etkileyen ana maliyetlerdir. Özellikle vergi tarafı GTİP varsayımıyla bağlantılı olduğu için erken doğrulama önemlidir.</p><p>Lojistikte de sadece navlun rakamına değil, hangi teslim modeliyle ne kadar kontrol aldığınıza bakmak gerekir. Bazen düşük navlun görünen teklif, daha fazla belirsizlik yaratabilir.</p><h2 id='yerel-giderler'>3. Yerel giderleri küçük görmeyin</h2><p>Müşavirlik, ardiye, evrak, depo ve yurtiçi taşıma gibi masraflar çoğu zaman teklif aşamasında ikinci plana atılır. Fakat ilk sevkiyatta özellikle bu alanlar toplam bütçeyi şaşırtabilir. Bu yüzden yerel giderler için baştan bir tampon kalem bırakmak daha güvenli olur.</p><ul><li>Müşavirlik ve işlem gideri</li><li>Ardiye veya depo masrafı</li><li>Yurtiçi nakliye</li><li>Diğer öngörülmeyen küçük operasyon kalemleri</li></ul><h2 id='kur-tamponu'>4. Kur stresi için küçük bir güvenlik payı bırakın</h2><p>Döviz bazlı ithalat planında kur değişimi tek başına maliyet farkı yaratabilir. Bu yüzden hesaplamayı yaparken sadece bugünkü kurla yetinmek yerine, yüzde 3 ila yüzde 5 arası stres testi yapmak daha gerçekçidir. Böylece fiyatlama sırasında nefes alanınız olur.</p><blockquote>İlk ithalatta doğru soru, ürün kaç paraya geliyor değil; bütün masraflar eklendiğinde 1 adet bana gerçekten kaça mal oluyor sorusudur.</blockquote><h2 id='sonuc'>Sonuç</h2><p>İlk ithalat bütçesi, ürün fiyatı ile başlayan ama orada bitmeyen bir plandır. Vergi, navlun, yerel gider ve kur stresi birlikte düşünülürse hem daha doğru satış fiyatı çıkar hem de sevkiyat günü sürpriz azalır. Bu yüzden karar öncesi bütçeyi tek ekranda görmek ciddi hız ve netlik sağlar.</p>",
+    "status": "published"
+  }
+]

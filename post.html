@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RotaPort Blog Yazısı</title>
+    <meta
+      name="description"
+      content="RotaPort Blog içeriği yükleniyor."
+    />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="script.js"></script>
+    <script defer src="blog.js"></script>
+  </head>
+  <body data-whatsapp="905318639117">
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container header-inner">
+          <a class="brand" href="index.html" aria-label="RotaPort ana sayfa">
+            <span class="brand-mark">RP</span>
+            <span class="brand-text">
+              <strong>RotaPort</strong>
+              <small>Dış Ticaret Danışmanlığı</small>
+            </span>
+          </a>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Menüyü aç"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <nav class="site-nav" id="site-nav" data-open="false">
+            <a href="index.html#hizmetler">Hizmetler</a>
+            <a href="index.html#hakkimizda">Hakkımızda</a>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#riskler">Riskler</a>
+            <a href="index.html#iletisim" class="button button-nav">30 dk analiz al</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="page-hero">
+          <div class="container page-hero-grid page-hero-grid-single">
+            <div class="reveal" style="--delay: 0.05s">
+              <div class="breadcrumbs" id="post-breadcrumb">
+                <a href="index.html">Ana Sayfa</a>
+                <span>/</span>
+                <a href="blog.html">Blog</a>
+                <span>/</span>
+                <span>Yazı yükleniyor</span>
+              </div>
+              <p class="eyebrow" id="post-category">Blog Yazısı</p>
+              <h1 class="page-title" id="post-title">Yazı yükleniyor...</h1>
+              <p class="lead" id="post-excerpt">
+                İçerik veri dosyasından okunuyor. Eğer yazı bulunamazsa admin panelden slug
+                kontrolü yapmanız gerekir.
+              </p>
+              <div class="post-meta" id="post-meta">
+                <span>Yükleniyor</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container article-shell article-shell-single">
+            <article class="article-body reveal" id="post-article" style="--delay: 0.05s">
+              <p class="article-intro">İçerik yükleniyor...</p>
+            </article>
+
+            <div class="aside-card article-cta article-cta-inline reveal" style="--delay: 0.12s">
+              <h3>Bu konuyu kendi sürecinize göre netleştirelim</h3>
+              <p>
+                Yazı genel çerçeveyi verir; ama doğru karar ürün, ülke, supplier ve maliyet
+                yapınıza göre netleşir.
+              </p>
+              <a class="button button-primary" href="index.html#iletisim">Ön görüşme al</a>
+              <a
+                class="button button-whatsapp js-whatsapp-link"
+                href="index.html#iletisim"
+                data-whatsapp-message="Merhaba, blog yazısındaki konu için dış ticaret danışmanlığı almak istiyorum."
+              >
+                WhatsApp'tan yaz
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <div>
+            <strong>RotaPort</strong>
+            <p>Dış ticaret süreçleri için netlik, hız ve daha kontrollü karar zemini.</p>
+          </div>
+
+          <div class="footer-links">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="index.html#hizmetler">Hizmetler</a>
+            <a href="index.html#hakkimizda">Hakkımızda</a>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#iletisim">İletişim</a>
+          </div>
+
+          <p>© <span id="year"></span> RotaPort. Tüm hakları saklıdır.</p>
+        </div>
+      </footer>
+
+      <a
+        class="whatsapp-fab js-whatsapp-link"
+        href="index.html#iletisim"
+        data-whatsapp-message="Merhaba, blog yazısındaki konu için danışmanlık almak istiyorum."
+        aria-label="WhatsApp ile iletişim kur"
+      >
+        WhatsApp
+      </a>
+    </div>
+  </body>
+</html>

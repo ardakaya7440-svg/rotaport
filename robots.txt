@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# ChatGPT arama görünürlüğü için açık bırakıldı.
+User-agent: OAI-SearchBot
+Allow: /
+
+# İçeriğinizin model eğitimi için taranmasını istemiyorsanız kapalı kalabilir.
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://rotaport.org/sitemap.xml

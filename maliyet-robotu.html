@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RotaPort Maliyet Robotu | İthalat ve İhracat Hesaplama Aracı</title>
+    <meta
+      name="description"
+      content="İthalat ve ihracat süreçlerinde ürün maliyeti, vergi, lojistik, belge, kâr marjı ve teklif fiyatını planlamak için hazırlanmış ayrı maliyet hesaplama aracı."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#153543" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="maliyet-robotu.css" />
+    <script defer src="maliyet-robotu.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Ayrı araç / site dosyalarından bağımsız</p>
+          <h1>İthalat ve ihracat maliyetlerini tek ekranda planlayan hesaplama robotu</h1>
+          <p class="lead">
+            Bu araç, ilk tekliften sevkiyat planına kadar dış ticaret maliyetini daha görünür
+            hale getirmek için hazırlandı. Resmi beyan veya gümrük mevzuatı yerine geçmez;
+            ama karar öncesi hangi kalemin kârlılığı bozduğunu çok hızlı gösterir.
+          </p>
+
+          <div class="hero-points">
+            <span>İthalat landed cost hesabı</span>
+            <span>İhracat teklif ve kâr marjı planı</span>
+            <span>Kur stresi ve robot yorumu</span>
+          </div>
+        </div>
+
+        <aside class="hero-note">
+          <span class="note-badge">Planlama modu</span>
+          <p>
+            Bu robotu özellikle ilk sevkiyat, ilk fiyatlama ve ilk marj analizi aşamasında
+            kullanmak mantıklı. Gerçek GTİP, vergi oranı ve ülke bazlı belge gerekliliklerini
+            ayrıca doğrulamanız gerekir.
+          </p>
+        </aside>
+      </header>
+
+      <main>
+        <section class="switcher" aria-label="Hesaplama modu seçimi">
+          <button class="switch is-active" type="button" data-tab="import">
+            İthalat Robotu
+          </button>
+          <button class="switch" type="button" data-tab="export">
+            İhracat Robotu
+          </button>
+        </section>
+
+        <section class="calculator is-active" data-panel="import">
+          <div class="workspace">
+            <form class="panel form-panel" data-form="import">
+              <div class="panel-head">
+                <p class="eyebrow">İthalat Modu</p>
+                <h2>Ürün, vergi ve lojistik toplamını birlikte görün</h2>
+                <p>
+                  Bu bölüm, ithalat öncesi landed cost planı çıkarmak için kurgulandı.
+                  Yurt dışı maliyetlerini döviz bazlı, yerel maliyetleri TL bazlı girin.
+                </p>
+              </div>
+
+              <div class="field-grid">
+                <label class="field">
+                  <span class="label-row">Ürün para birimi</span>
+                  <select name="foreignCurrency">
+                    <option value="USD" selected>USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="CNY">CNY</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                </label>
+
+                <label class="field">
+                  <span class="label-row">1 birim ürün fiyatı</span>
+                  <input type="number" name="unitPrice" min="0" step="0.01" value="8.5" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Adet</span>
+                  <input type="number" name="quantity" min="1" step="1" value="1000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Kur (1 yabancı para = TRY)</span>
+                  <input type="number" name="fxRate" min="0" step="0.0001" value="38.5" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Yurt dışı navlun
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Ürünün çıkış noktasından Türkiye'ye taşıma bedelidir. Örnek: deniz navlunu 1.200 USD, hava kargo 850 USD."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="freightForeign" min="0" step="0.01" value="1200" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Sigorta
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Taşıma sırasında yükü sigortalatmak için ödenen bedeldir. Örnek: 150 USD yük sigortası, 90 EUR taşıma sigortası."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="insuranceForeign" min="0" step="0.01" value="150" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Gümrük vergisi %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Ürünün GTİP'ine göre hesaplanan temel vergi oranıdır. Örnek: yüzde 8 veya yüzde 12."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="customsRate" min="0" step="0.01" value="8" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    İlave vergi %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Bazı ürünlerde temel vergiye ek gelen oranlardır. Örnek: ilave gümrük vergisi yüzde 10, ek mali yükümlülük yüzde 5."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="additionalRate" min="0" step="0.01" value="10" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">KDV %</span>
+                  <input type="number" name="vatRate" min="0" step="0.01" value="20" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Gümrük müşavirliği / işlem gideri (TRY)
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Müşavirlik, dosya açılışı, temsil ve işlem takibi gibi giderlerdir. Örnek: 9.000 TRY müşavirlik, 2.000 TRY ek işlem ücreti."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="brokerFee" min="0" step="0.01" value="9000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Depo / ardiye / evrak gideri (TRY)
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Liman, depo, ardiye ve belge düzenleme sırasında çıkan yerel masraflardır. Örnek: 3.500 TRY ardiye, 1.200 TRY evrak gideri."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="warehouseFee" min="0" step="0.01" value="3500" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Yurtiçi nakliye (TRY)</span>
+                  <input type="number" name="inlandTransport" min="0" step="0.01" value="6000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Diğer yerel giderler (TRY)</span>
+                  <input type="number" name="otherLocal" min="0" step="0.01" value="2500" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Hedef satış marjı %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Maliyet üstüne koymak istediğiniz hedef kazanç oranıdır. Örnek: yüzde 20 temkinli, yüzde 30 daha rahat marj."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="targetMarkup" min="0" step="0.01" value="30" />
+                </label>
+              </div>
+            </form>
+
+            <div class="panel result-panel">
+              <div class="panel-head">
+                <p class="eyebrow">İthalat Sonucu</p>
+                <h2>Maliyet kırılımı</h2>
+                <p>
+                  Aşağıdaki kartlar vergi, CIF, toplam landed cost ve tavsiye edilen satış
+                  seviyesini anlık hesaplar.
+                </p>
+              </div>
+
+              <div class="result-grid">
+                <article class="result-card accent">
+                  <span class="label-row">Ürün Bedeli</span>
+                  <strong data-result="import-productTry">-</strong>
+                  <small data-result="import-productForeign">-</small>
+                </article>
+
+                <article class="result-card">
+                  <span class="label-row">
+                    CIF Tabanı
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Ürün + navlun + sigorta toplamıdır. Vergi hesaplarının çoğu bu taban üzerinden başlar. Örnek: 8.500 USD ürün + 1.200 USD navlun + 150 USD sigorta."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <strong data-result="import-cif">-</strong>
+                  <small>Ürün + navlun + sigorta</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Vergi Toplamı</span>
+                  <strong data-result="import-taxTotal">-</strong>
+                  <small data-result="import-taxBreakdown">-</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Yerel Giderler</span>
+                  <strong data-result="import-localTotal">-</strong>
+                  <small>Müşavirlik, ardiye, nakliye, diğer</small>
+                </article>
+
+                <article class="result-card accent-soft">
+                  <span>Toplam İthalat Maliyeti</span>
+                  <strong data-result="import-total">-</strong>
+                  <small>Bütün kalemler dahil tahmini toplam</small>
+                </article>
+
+                <article class="result-card">
+                  <span class="label-row">
+                    Birim Landed Cost
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Bütün vergiler ve yerel giderler dahil 1 adet ürünün size gerçek geliş maliyetidir. Örnek: birim maliyet 520 TRY ise satış hesabı bunun üstüne kurulur."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <strong data-result="import-unitCost">-</strong>
+                  <small>1 adet için ortalama maliyet</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Tavsiye Edilen Satış</span>
+                  <strong data-result="import-sellPrice">-</strong>
+                  <small>Girilen hedef marja göre</small>
+                </article>
+
+                <article class="result-card">
+                  <span>%5 Kur Stresi</span>
+                  <strong data-result="import-fxStress">-</strong>
+                  <small>Kur artışında ek yük tahmini</small>
+                </article>
+              </div>
+
+              <div class="insight-shell">
+                <div class="insight-card">
+                  <h3>Robot Yorumu</h3>
+                  <ul class="insight-list" data-insights="import"></ul>
+                </div>
+
+                <div class="insight-card">
+                  <div class="summary-head">
+                    <h3>Özet Not</h3>
+                    <button class="ghost-button" type="button" data-copy="import">
+                      Özeti kopyala
+                    </button>
+                  </div>
+                  <pre class="summary-box" data-summary="import"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="calculator" data-panel="export">
+          <div class="workspace">
+            <form class="panel form-panel" data-form="export">
+              <div class="panel-head">
+                <p class="eyebrow">İhracat Modu</p>
+                <h2>Teklif fiyatı ve kâr marjını senaryo bazlı planla</h2>
+                <p>
+                  Bu bölüm, üretim maliyetinden teklif birim fiyatına kadar ihracat
+                  hesaplaması yapar. Amacı hem başa baş noktayı hem de hedef marjlı teklifi
+                  aynı anda görmenizi sağlamaktır.
+                </p>
+              </div>
+
+              <div class="field-grid">
+                <label class="field">
+                  <span class="label-row">Teklif para birimi</span>
+                  <select name="quoteCurrency">
+                    <option value="USD" selected>USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Teklif kuru (1 yabancı para = TRY)</span>
+                  <input type="number" name="quoteFxRate" min="0" step="0.0001" value="38.5" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">1 birim üretim maliyeti (TRY)</span>
+                  <input type="number" name="productionUnitCost" min="0" step="0.01" value="115" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Adet</span>
+                  <input type="number" name="quantity" min="1" step="1" value="1000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">1 birim ambalaj / paketleme (TRY)</span>
+                  <input type="number" name="packagingUnitCost" min="0" step="0.01" value="8" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Yurtiçi lojistik (TRY)</span>
+                  <input type="number" name="localLogistics" min="0" step="0.01" value="12000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Gümrük / belge / operasyon gideri (TRY)</span>
+                  <input type="number" name="customsDocs" min="0" step="0.01" value="6500" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Banka / komisyon oranı %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Tahsilat komisyonu, banka masrafı veya satış komisyonu gibi oranlardır. Örnek: yüzde 3 ödeme komisyonu, yüzde 1.5 banka kesintisi."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="commissionRate" min="0" step="0.01" value="3" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">Diğer giderler (TRY)</span>
+                  <input type="number" name="otherCosts" min="0" step="0.01" value="3000" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Hedef kâr marjı %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Normal koşullarda ulaşmak istediğiniz marj hedefidir. Örnek: yüzde 22 dengeli, yüzde 30 güçlü marj."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="targetMargin" min="0" step="0.01" value="22" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Agresif fiyat marjı %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Müşteri kazanmak için daha düşük marjla vereceğiniz teklif seviyesidir. Örnek: yüzde 10 ila yüzde 15."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="aggressiveMargin" min="0" step="0.01" value="14" />
+                </label>
+
+                <label class="field">
+                  <span class="label-row">
+                    Güçlü teklif marjı %
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Pazarda gücünüz varsa veya ürününüz daha değerliyse kullanacağınız daha yüksek marjlı senaryodur. Örnek: yüzde 28 ila yüzde 35."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <input type="number" name="confidentMargin" min="0" step="0.01" value="28" />
+                </label>
+              </div>
+            </form>
+
+            <div class="panel result-panel">
+              <div class="panel-head">
+                <p class="eyebrow">İhracat Sonucu</p>
+                <h2>Teklif ve marj ekranı</h2>
+                <p>
+                  Burada hem başa baş noktayı hem de üç farklı teklif senaryosunu görürsünüz:
+                  agresif, hedef ve güçlü teklif.
+                </p>
+              </div>
+
+              <div class="result-grid">
+                <article class="result-card accent">
+                  <span class="label-row">Toplam Baz Maliyet</span>
+                  <strong data-result="export-baseCost">-</strong>
+                  <small>Üretim + ambalaj + operasyon</small>
+                </article>
+
+                <article class="result-card">
+                  <span class="label-row">Komisyon Yükü</span>
+                  <strong data-result="export-commission">-</strong>
+                  <small>Banka / ödeme / satış komisyonu</small>
+                </article>
+
+                <article class="result-card">
+                  <span class="label-row">
+                    Başa Baş Teklif
+                    <span
+                      class="help-tip"
+                      tabindex="0"
+                      data-tip="Kâr etmeden ama zarar da etmeden çıkmanız gereken minimum teklif seviyesidir. Örnek: birim 5.20 USD ise bunun altı zarar üretebilir."
+                    >
+                      ?
+                    </span>
+                  </span>
+                  <strong data-result="export-breakevenForeign">-</strong>
+                  <small data-result="export-breakevenTry">-</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Agresif Teklif</span>
+                  <strong data-result="export-aggressiveForeign">-</strong>
+                  <small data-result="export-aggressiveTry">-</small>
+                </article>
+
+                <article class="result-card accent-soft">
+                  <span>Hedef Teklif</span>
+                  <strong data-result="export-targetForeign">-</strong>
+                  <small data-result="export-targetTry">-</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Güçlü Teklif</span>
+                  <strong data-result="export-confidentForeign">-</strong>
+                  <small data-result="export-confidentTry">-</small>
+                </article>
+
+                <article class="result-card">
+                  <span>Birim Baz Maliyet</span>
+                  <strong data-result="export-unitBaseCost">-</strong>
+                  <small>1 adet için ortalama maliyet</small>
+                </article>
+
+                <article class="result-card">
+                  <span>%5 Kur Sapması</span>
+                  <strong data-result="export-fxStress">-</strong>
+                  <small>Kur düşerse gelir etkisi</small>
+                </article>
+              </div>
+
+              <div class="insight-shell">
+                <div class="insight-card">
+                  <h3>Robot Yorumu</h3>
+                  <ul class="insight-list" data-insights="export"></ul>
+                </div>
+
+                <div class="insight-card">
+                  <div class="summary-head">
+                    <h3>Özet Not</h3>
+                    <button class="ghost-button" type="button" data-copy="export">
+                      Özeti kopyala
+                    </button>
+                  </div>
+                  <pre class="summary-box" data-summary="export"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="footer-note">
+          <div class="note-card">
+            <h2>Kullanım Notu</h2>
+            <p>
+              Bu araç planlama içindir. Resmi ithalat vergileri, gerçek GTİP, ülke bazlı
+              belge zorunlulukları, müşteri şartları, akreditif veya özel teslim kalemleri
+              ayrıca doğrulanmalıdır. Yani bu robot “karar öncesi görünürlük” sağlar; nihai
+              beyan ya da bağlayıcı mevzuat sonucu üretmez.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
