@@ -381,14 +381,19 @@ const savePost = async (event) => {
 
     payload.slug = payload.slug || slugify(payload.title);
     setEditorBusy(true);
-    setStatus("Kaydediliyor...");
+    setStatus("Oturum doğrulanıyor...");
 
     const {
       data: { session },
-    } = await supabase.auth.getSession();
+    } = await withTimeout(
+      supabase.auth.getSession(),
+      8000,
+      "Oturum bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap."
+    );
 
     const row = mapPayloadToRow(payload, session?.user?.id);
     let response;
+    setStatus("Veritabanına yazılıyor...");
 
     if (payload.id) {
       response = await withTimeout(
@@ -411,7 +416,11 @@ const savePost = async (event) => {
 
     selectedId = payload.id || null;
     setStatus("Yazı kaydedildi, liste yenileniyor...");
-    await refreshPosts();
+    await withTimeout(
+      refreshPosts(),
+      12000,
+      "Yazı kaydedildi ama liste yenileme zaman aşımına uğradı. Sayfayı yenileyip kontrol et."
+    );
     focusSavedPost(payload);
     setStatus("Yazı kaydedildi.");
   } catch (error) {
@@ -438,20 +447,33 @@ const deletePost = async () => {
     return;
   }
 
-  const { error } = await withTimeout(
-    supabase.from(POSTS_TABLE).delete().eq("id", payload.id),
-    12000,
-    "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
-  );
-  if (error) {
-    setStatus(`Silme sırasında hata oluştu: ${error.message}`);
-    return;
-  }
+  try {
+    setEditorBusy(true);
+    setStatus("Yazı siliniyor...");
 
-  selectedId = null;
-  fillForm(emptyPost());
-  setStatus("Yazı silindi.");
-  await refreshPosts();
+    const { error } = await withTimeout(
+      supabase.from(POSTS_TABLE).delete().eq("id", payload.id),
+      12000,
+      "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
+    );
+    if (error) {
+      setStatus(`Silme sırasında hata oluştu: ${error.message}`);
+      return;
+    }
+
+    selectedId = null;
+    fillForm(emptyPost());
+    setStatus("Yazı silindi.");
+    await withTimeout(
+      refreshPosts(),
+      12000,
+      "Yazı silindi ama liste yenileme zaman aşımına uğradı. Sayfayı yenileyip kontrol et."
+    );
+  } catch (error) {
+    setStatus(`Beklenmeyen hata: ${error.message || "Silme işlemi tamamlanamadı."}`);
+  } finally {
+    setEditorBusy(false);
+  }
 };
 
 const insertSnippet = (snippet) => {
