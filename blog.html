@@ -30,6 +30,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="supabase-config.js"></script>
     <script defer src="script.js"></script>
     <script defer src="blog.js"></script>
   </head>
@@ -60,6 +62,7 @@
           <nav class="site-nav" id="site-nav" data-open="false">
             <a href="index.html#hizmetler">Hizmetler</a>
             <a href="index.html#hakkimizda">Hakkımızda</a>
+            <a href="hesaplayici.html">Hesaplayıcı</a>
             <a href="blog.html">Blog</a>
             <a href="index.html#riskler">Riskler</a>
             <a href="index.html#iletisim" class="button button-nav">30 dk analiz al</a>
@@ -99,8 +102,9 @@
             <aside class="blog-panel reveal" style="--delay: 0.12s">
               <span class="inline-badge">Canlı içerik arşivi</span>
               <p>
-                Bu sayfadaki kartlar ortak veri dosyasından üretilir. Mevcut legacy yazılar
-                çalışmaya devam ederken yeni içerikler de aynı akıştan eklenebilir.
+                Bu sayfadaki kartlar canlı veri tabanından okunabilir, gerekirse yerel yedek
+                içerik akışıyla da devam eder. Mevcut legacy yazılar çalışırken yeni içerikler
+                tek panelden eklenebilir.
               </p>
               <div class="topic-chips" id="blog-category-list">
                 <span class="topic-chip">İthalat</span>
@@ -118,8 +122,8 @@
               <p class="eyebrow">Yazılar</p>
               <h2>Yeni yazılar geldikçe burası otomatik büyür</h2>
               <p>
-                Aşağıdaki kartlar artık sabit HTML blokları değil. Admin panelden eklenen ya da
-                düzenlenen içerikler bu listeye otomatik düşer.
+                Aşağıdaki kartlar artık sabit HTML blokları değil. Canlı admin panelinden eklenen
+                ya da düzenlenen içerikler bu listeye otomatik düşer.
               </p>
             </div>
 
@@ -185,6 +189,7 @@
             <a href="index.html">Ana Sayfa</a>
             <a href="index.html#hizmetler">Hizmetler</a>
             <a href="index.html#hakkimizda">Hakkımızda</a>
+            <a href="hesaplayici.html">Hesaplayıcı</a>
             <a href="blog.html">Blog</a>
             <a href="index.html#iletisim">İletişim</a>
           </div>

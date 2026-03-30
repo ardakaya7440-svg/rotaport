@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RotaPort Admin | Canlı Blog Yönetimi</title>
+    <meta
+      name="description"
+      content="RotaPort blog içeriklerini canlı ortamda yönetmek için hazırlanan korumalı admin paneli."
+    />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="supabase-config.js"></script>
+    <script defer src="admin.js"></script>
+  </head>
+  <body
+    data-site-base="index.html"
+    data-blog-index="blog.html"
+    data-post-template="post.html"
+    data-legacy-prefix=""
+  >
+    <section class="auth-shell" id="auth-screen">
+      <div class="auth-card">
+        <p class="eyebrow">RotaPort Admin</p>
+        <h1>Canlı blog yönetimine giriş yap</h1>
+        <p class="lead">
+          Bu sayfa internette yayınlanır ama herkese açık bir editör olmaz. Yalnızca giriş
+          yapan ve Supabase tarafında yetkilendirilmiş kullanıcı içerik oluşturabilir.
+        </p>
+
+        <div class="auth-note" id="config-note">
+          <strong>Kurulum notu</strong>
+          <p>
+            Önce `supabase-config.js` içine proje URL ve anon key bilgisini yaz, sonra bu panel
+            girişe açılacaktır.
+          </p>
+        </div>
+
+        <form class="auth-form" id="login-form">
+          <label class="field">
+            <span>E-posta</span>
+            <input type="email" name="email" placeholder="admin@rotaport.org" required />
+          </label>
+
+          <label class="field">
+            <span>Şifre</span>
+            <input type="password" name="password" placeholder="••••••••" required />
+          </label>
+
+          <button class="primary-button" type="submit" id="login-button">Giriş yap</button>
+          <p class="status-line" id="auth-status">
+            Hazır. Girişten sonra panel açılacak.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <div class="admin-shell is-hidden" id="admin-app">
+      <header class="admin-hero">
+        <div>
+          <p class="eyebrow">Canlı Blog Admin</p>
+          <h1>Yeni blog yazısı ekle, mevcut içerikleri güncelle, yayını tek panelden yönet</h1>
+          <p class="lead">
+            Bu sürüm artık yerel JSON dosyasına değil, canlı veri tabanına yazar. Yani Vercel'de
+            yayınlanan sitede yeni yazı eklediğinde blog listesi doğrudan güncellenir.
+          </p>
+        </div>
+
+        <div class="hero-card">
+          <span class="badge">Canlı mod aktif</span>
+          <p>
+            Admin sayfası internette yayında kalır ama arama motorlarına kapalıdır ve giriş
+            zorunludur. Yazı listesi Supabase üzerinden okunur, kaydetme ve silme işlemleri de
+            aynı akıştan geçer.
+          </p>
+
+          <div class="session-box">
+            <span>Oturum</span>
+            <strong id="session-email">-</strong>
+          </div>
+
+          <div class="hero-actions">
+            <a href="blog.html" target="_blank" rel="noopener noreferrer">Canlı blogu aç</a>
+            <button class="ghost-button" type="button" id="sign-out">Çıkış yap</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-grid">
+        <aside class="panel sidebar">
+          <div class="panel-head compact">
+            <div>
+              <p class="eyebrow">Yazı Listesi</p>
+              <h2>İçerikler</h2>
+            </div>
+            <button class="primary-button" type="button" id="new-post">Yeni Yazı</button>
+          </div>
+
+          <label class="search-field">
+            <span>Ara</span>
+            <input type="search" id="search-input" placeholder="Başlık veya slug" />
+          </label>
+
+          <div class="post-list" id="post-list"></div>
+        </aside>
+
+        <section class="editor-stack">
+          <form class="panel editor" id="post-form">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Editör</p>
+                <h2 id="editor-title">Yeni yazı oluştur</h2>
+              </div>
+              <div class="toolbar-actions">
+                <button class="ghost-button" type="button" id="delete-post">Sil</button>
+                <button class="primary-button" type="submit">Kaydet</button>
+              </div>
+            </div>
+
+            <input type="hidden" name="id" />
+            <input type="hidden" name="category" value="RotaPort Blog" />
+
+            <div class="quick-tools">
+              <div class="quick-tool-meta">
+                <span>Yayın linki</span>
+                <code class="public-url" id="public-url">
+                  Slug oluşunca yayın linki burada görünecek.
+                </code>
+              </div>
+              <div class="quick-tool-actions">
+                <button class="ghost-button" type="button" id="open-public">Yazıyı aç</button>
+                <button class="ghost-button" type="button" id="copy-public">Linki kopyala</button>
+              </div>
+            </div>
+
+            <div class="field-grid">
+              <label class="field">
+                <span>Durum</span>
+                <select name="status">
+                  <option value="draft">Taslak</option>
+                  <option value="published">Yayında</option>
+                </select>
+              </label>
+
+              <label class="field full">
+                <span>Başlık</span>
+                <input type="text" name="title" placeholder="Yazı başlığını gir" required />
+              </label>
+
+              <label class="field">
+                <span>Slug</span>
+                <input type="text" name="slug" placeholder="yazi-slug-buraya" />
+              </label>
+
+              <label class="field">
+                <span>Okuma süresi</span>
+                <input type="text" name="readTime" placeholder="8 dk okuma" />
+              </label>
+
+              <label class="field">
+                <span>Tarih</span>
+                <input type="date" name="date" />
+              </label>
+
+              <label class="field">
+                <span>Legacy URL</span>
+                <input type="text" name="legacyUrl" placeholder="ornek-eski-yazi.html" />
+              </label>
+
+              <label class="field full">
+                <span>Kart özeti / meta açıklama</span>
+                <textarea
+                  name="excerpt"
+                  rows="3"
+                  placeholder="Blog kartında ve yazı özetinde görünen kısa açıklama"
+                ></textarea>
+              </label>
+
+              <label class="field full">
+                <span>Kart maddeleri</span>
+                <textarea
+                  name="points"
+                  rows="4"
+                  placeholder="Her satıra bir madde yaz&#10;Örnek madde 1&#10;Örnek madde 2"
+                ></textarea>
+              </label>
+            </div>
+
+            <div class="body-toolbar">
+              <span>İçerik kısayolları</span>
+              <div class="snippet-group">
+                <button type="button" class="snippet-button" data-snippet="<h2>Yeni başlık</h2>">
+                  H2
+                </button>
+                <button type="button" class="snippet-button" data-snippet="<h3>Ara başlık</h3>">
+                  H3
+                </button>
+                <button type="button" class="snippet-button" data-snippet="<p>Paragraf metni</p>">
+                  Paragraf
+                </button>
+                <button
+                  type="button"
+                  class="snippet-button"
+                  data-snippet="<ul><li>Madde 1</li><li>Madde 2</li></ul>"
+                >
+                  Liste
+                </button>
+                <button
+                  type="button"
+                  class="snippet-button"
+                  data-snippet="<blockquote>Vurgulamak istediğin kısa cümle</blockquote>"
+                >
+                  Alıntı
+                </button>
+              </div>
+            </div>
+
+            <label class="field full">
+              <span>Yazı gövdesi (HTML)</span>
+              <textarea
+                name="bodyHtml"
+                rows="18"
+                placeholder="Buraya yazı gövdesini HTML olarak gir. Legacy yazıda boş bırakıp sadece kart bilgisini de yönetebilirsin."
+              ></textarea>
+            </label>
+
+            <p class="status-line" id="status-line">Hazır.</p>
+          </form>
+
+          <div class="panel preview">
+            <div class="panel-head">
+              <div>
+                <p class="eyebrow">Canlı Önizleme</p>
+                <h2>Kart ve içerik görünümü</h2>
+              </div>
+            </div>
+
+            <div class="preview-card" id="card-preview"></div>
+            <div class="preview-article" id="article-preview"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
