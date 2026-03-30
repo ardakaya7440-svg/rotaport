@@ -12,6 +12,7 @@ const formEl = document.getElementById("post-form");
 const searchInput = document.getElementById("search-input");
 const newButton = document.getElementById("new-post");
 const deleteButton = document.getElementById("delete-post");
+const saveButton = document.getElementById("save-post");
 const statusLine = document.getElementById("status-line");
 const editorTitle = document.getElementById("editor-title");
 const cardPreview = document.getElementById("card-preview");
@@ -90,6 +91,17 @@ const setAuthStatus = (text) => {
 
 const setStatus = (text) => {
   statusLine.textContent = text;
+};
+
+const setEditorBusy = (isBusy) => {
+  if (saveButton) {
+    saveButton.disabled = isBusy;
+    saveButton.textContent = isBusy ? "Kaydediliyor..." : "Kaydet";
+  }
+
+  if (deleteButton) {
+    deleteButton.disabled = isBusy;
+  }
 };
 
 const buildPublicUrl = (post) => {
@@ -278,41 +290,49 @@ const refreshPosts = async () => {
 const savePost = async (event) => {
   event.preventDefault();
 
-  const supabase = getSupabaseClient();
-  if (!supabase) {
-    setStatus("Supabase yapılandırması eksik.");
-    return;
+  try {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      setStatus("Supabase yapılandırması eksik.");
+      return;
+    }
+
+    const payload = getFormData();
+    if (!payload.title) {
+      setStatus("Başlık zorunlu.");
+      return;
+    }
+
+    payload.slug = payload.slug || slugify(payload.title);
+    setEditorBusy(true);
+    setStatus("Kaydediliyor...");
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    const row = mapPayloadToRow(payload, session?.user?.id);
+    let response;
+
+    if (payload.id) {
+      response = await supabase.from(POSTS_TABLE).update(row).eq("id", payload.id).select().single();
+    } else {
+      response = await supabase.from(POSTS_TABLE).insert(row).select().single();
+    }
+
+    if (response.error) {
+      setStatus(`Kaydetme sırasında hata oluştu: ${response.error.message}`);
+      return;
+    }
+
+    selectedId = response.data?.id || payload.id || null;
+    setStatus("Yazı kaydedildi.");
+    await refreshPosts();
+  } catch (error) {
+    setStatus(`Beklenmeyen hata: ${error.message || "Kaydetme işlemi tamamlanamadı."}`);
+  } finally {
+    setEditorBusy(false);
   }
-
-  const payload = getFormData();
-  if (!payload.title) {
-    setStatus("Başlık zorunlu.");
-    return;
-  }
-
-  payload.slug = payload.slug || slugify(payload.title);
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const row = mapPayloadToRow(payload, session?.user?.id);
-  let response;
-
-  if (payload.id) {
-    response = await supabase.from(POSTS_TABLE).update(row).eq("id", payload.id).select().single();
-  } else {
-    response = await supabase.from(POSTS_TABLE).insert(row).select().single();
-  }
-
-  if (response.error) {
-    setStatus(`Kaydetme sırasında hata oluştu: ${response.error.message}`);
-    return;
-  }
-
-  selectedId = response.data.id;
-  setStatus("Yazı kaydedildi.");
-  await refreshPosts();
 };
 
 const deletePost = async () => {
