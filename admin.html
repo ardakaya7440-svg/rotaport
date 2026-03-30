@@ -173,25 +173,10 @@
                 <span>Legacy URL</span>
                 <input type="text" name="legacyUrl" placeholder="ornek-eski-yazi.html" />
               </label>
-
-              <label class="field full">
-                <span>Kart özeti / meta açıklama</span>
-                <textarea
-                  name="excerpt"
-                  rows="3"
-                  placeholder="Blog kartında ve yazı özetinde görünen kısa açıklama"
-                ></textarea>
-              </label>
-
-              <label class="field full">
-                <span>Kart maddeleri</span>
-                <textarea
-                  name="points"
-                  rows="4"
-                  placeholder="Her satıra bir madde yaz&#10;Örnek madde 1&#10;Örnek madde 2"
-                ></textarea>
-              </label>
             </div>
+
+            <input type="hidden" name="excerpt" value="" />
+            <input type="hidden" name="points" value="" />
 
             <div class="body-toolbar">
               <span>İçerik kısayolları</span>
@@ -227,7 +212,7 @@
               <textarea
                 name="bodyHtml"
                 rows="18"
-                placeholder="Buraya yazı gövdesini HTML olarak gir. Legacy yazıda boş bırakıp sadece kart bilgisini de yönetebilirsin."
+                placeholder="Buraya yazı gövdesini HTML olarak gir."
               ></textarea>
             </label>
 

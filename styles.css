@@ -844,6 +844,63 @@ img {
   box-shadow: 0 0 0 5px rgba(70, 191, 208, 0.1);
 }
 
+.calculator-teaser {
+  align-items: stretch;
+}
+
+.calculator-teaser-preview {
+  display: grid;
+  gap: 18px;
+  padding: 26px;
+  border-radius: 26px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(circle at top right, rgba(70, 191, 208, 0.14), transparent 34%),
+    rgba(255, 255, 255, 0.03);
+}
+
+.calculator-preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.calculator-preview-head strong {
+  font-size: 0.98rem;
+}
+
+.calculator-preview-list {
+  display: grid;
+  gap: 12px;
+}
+
+.calculator-preview-list article {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.calculator-preview-list span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.calculator-preview-list strong {
+  font-size: 1.05rem;
+  color: var(--text);
+}
+
+.calculator-teaser-preview p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
 .contact-grid {
   align-items: center;
 }
@@ -1093,7 +1150,7 @@ img {
 }
 
 .post-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .blog-value-grid {
@@ -1104,6 +1161,17 @@ img {
 .value-card {
   padding: 30px;
   border-radius: 28px;
+}
+
+.post-row {
+  display: grid;
+  gap: 14px;
+  padding: 24px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .post-meta {
@@ -1191,6 +1259,10 @@ img {
   grid-template-columns: minmax(0, 1fr);
   max-width: 880px;
   margin: 0 auto;
+}
+
+.page-hero-grid-single .post-meta {
+  margin-top: 16px;
 }
 
 .article-body {

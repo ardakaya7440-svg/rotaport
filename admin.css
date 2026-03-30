@@ -457,12 +457,6 @@ h3 {
   margin-bottom: 12px;
 }
 
-.preview-points {
-  margin: 0 0 18px;
-  padding-left: 20px;
-  color: var(--ink);
-}
-
 .preview-article :first-child {
   margin-top: 0;
 }

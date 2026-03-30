@@ -66,6 +66,20 @@ const normalizePost = (post) => ({
   status: post.status === "draft" ? "draft" : "published",
 });
 
+const stripHtml = (value) =>
+  String(value || "")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const buildDescription = (post) => {
+  const fromBody = stripHtml(post.bodyHtml);
+  const source = fromBody || post.excerpt || post.title || "RotaPort Blog yazısı";
+  return source.length > 170 ? `${source.slice(0, 167).trim()}...` : source;
+};
+
 const sortPosts = (posts) =>
   posts.sort((left, right) => {
     const leftTime = left.date ? new Date(left.date).getTime() : 0;
@@ -175,17 +189,9 @@ const renderIndex = (posts) => {
 
   container.innerHTML = posts
     .map((post) => {
-      const points = (post.points || [])
-        .slice(0, 3)
-        .map((point) => `<li>${escapeHtml(point)}</li>`)
-        .join("");
-
       return `
-        <article class="post-card reveal is-visible">
-          <div class="post-meta">${buildMetaHtml(post)}</div>
+        <article class="post-card post-row reveal is-visible">
           <h2>${escapeHtml(post.title)}</h2>
-          <p>${escapeHtml(post.excerpt)}</p>
-          <ul class="post-points">${points}</ul>
           <a class="post-link" href="${escapeHtml(resolvePostHref(post))}">Yazıyı oku</a>
         </article>
       `;
@@ -198,7 +204,7 @@ const updateMeta = (post) => {
 
   const description = document.querySelector('meta[name="description"]');
   if (description) {
-    description.setAttribute("content", post.excerpt);
+    description.setAttribute("content", buildDescription(post));
   }
 
   const canonical = document.querySelector('link[rel="canonical"]');
@@ -236,9 +242,6 @@ const renderPost = (posts) => {
   const breadcrumb = document.getElementById("post-breadcrumb");
   const category = document.getElementById("post-category");
   const title = document.getElementById("post-title");
-  const excerpt = document.getElementById("post-excerpt");
-  const meta = document.getElementById("post-meta");
-
   if (breadcrumb) {
     breadcrumb.innerHTML = `
       <a href="index.html">Ana Sayfa</a>
@@ -255,14 +258,6 @@ const renderPost = (posts) => {
 
   if (title) {
     title.textContent = post.title;
-  }
-
-  if (excerpt) {
-    excerpt.textContent = post.excerpt;
-  }
-
-  if (meta) {
-    meta.innerHTML = buildMetaHtml(post);
   }
 
   article.innerHTML = post.bodyHtml || "<p class='article-intro'>Bu yazının gövdesi henüz girilmedi.</p>";

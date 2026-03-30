@@ -287,7 +287,6 @@ const renderList = () => {
 const renderPreview = () => {
   const post = getFormData();
   const slug = post.slug || slugify(post.title);
-  const points = post.points.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
   const publicUrl = buildPublicUrl(post);
   const absoluteUrl = toAbsoluteUrl(publicUrl);
 
@@ -301,8 +300,6 @@ const renderPreview = () => {
       <span>${escapeHtml(post.date || "Tarih")}</span>
     </div>
     <h3>${escapeHtml(post.title || "Önizleme başlığı")}</h3>
-    <p>${escapeHtml(post.excerpt || "Kısa özet burada görünecek.")}</p>
-    <ul class="preview-points">${points || "<li>Madde önizlemesi burada görünür.</li>"}</ul>
     <p><strong>Slug:</strong> ${escapeHtml(slug || "otomatik-olusturulacak")}</p>
     <p><strong>Yayın linki:</strong> ${escapeHtml(absoluteUrl || "Henüz hazır değil")}</p>
     <p><strong>Bağlantı tipi:</strong> ${post.legacyUrl ? "Legacy URL" : "Dinamik yazı"}</p>
