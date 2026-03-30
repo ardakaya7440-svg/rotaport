@@ -24,12 +24,30 @@ const copyPublicButton = document.getElementById("copy-public");
 
 const SUPABASE_CONFIG = window.ROTAPORT_SUPABASE || {};
 const POSTS_TABLE = SUPABASE_CONFIG.postsTable || "blog_posts";
+const BLOG_ADMINS_TABLE = SUPABASE_CONFIG.blogAdminsTable || "blog_admins";
 const POST_TEMPLATE = document.body.dataset.postTemplate || "post.html";
 const LEGACY_PREFIX = document.body.dataset.legacyPrefix || "";
 
 let posts = [];
 let selectedId = null;
 let supabaseClient = null;
+let canManagePosts = false;
+
+const withTimeout = async (promise, timeoutMs, message) => {
+  let timeoutId;
+
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = window.setTimeout(() => {
+      reject(new Error(message));
+    }, timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
 
 const emptyPost = () => ({
   id: "",
@@ -95,13 +113,50 @@ const setStatus = (text) => {
 
 const setEditorBusy = (isBusy) => {
   if (saveButton) {
-    saveButton.disabled = isBusy;
+    saveButton.disabled = isBusy || !canManagePosts;
     saveButton.textContent = isBusy ? "Kaydediliyor..." : "Kaydet";
   }
 
   if (deleteButton) {
-    deleteButton.disabled = isBusy;
+    deleteButton.disabled = isBusy || !canManagePosts;
   }
+};
+
+const setPermissionState = () => {
+  if (newButton) {
+    newButton.disabled = !canManagePosts;
+  }
+
+  if (!canManagePosts) {
+    saveButton?.setAttribute("title", "Bu hesap için yazma yetkisi yok.");
+    deleteButton?.setAttribute("title", "Bu hesap için yazma yetkisi yok.");
+    newButton?.setAttribute("title", "Bu hesap için yazma yetkisi yok.");
+    return;
+  }
+
+  saveButton?.removeAttribute("title");
+  deleteButton?.removeAttribute("title");
+  newButton?.removeAttribute("title");
+};
+
+const checkAdminAccess = async (session) => {
+  const supabase = getSupabaseClient();
+
+  if (!supabase || !session?.user?.id) {
+    return false;
+  }
+
+  const { data, error } = await supabase
+    .from(BLOG_ADMINS_TABLE)
+    .select("user_id")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return Boolean(data?.user_id);
 };
 
 const buildPublicUrl = (post) => {
@@ -287,6 +342,22 @@ const refreshPosts = async () => {
   fillForm(current || emptyPost());
 };
 
+const focusSavedPost = (payload) => {
+  const match =
+    posts.find((post) => payload.id && post.id === payload.id) ||
+    posts.find((post) => post.slug === payload.slug) ||
+    posts.find((post) => post.title === payload.title);
+
+  if (match) {
+    fillForm(match);
+    renderList();
+    return;
+  }
+
+  fillForm(emptyPost());
+  renderList();
+};
+
 const savePost = async (event) => {
   event.preventDefault();
 
@@ -294,6 +365,11 @@ const savePost = async (event) => {
     const supabase = getSupabaseClient();
     if (!supabase) {
       setStatus("Supabase yapılandırması eksik.");
+      return;
+    }
+
+    if (!canManagePosts) {
+      setStatus("Bu hesap yazı kaydetme yetkisine sahip değil. Doğru admin hesabıyla giriş yap veya bu kullanıcıyı blog_admins tablosuna ekle.");
       return;
     }
 
@@ -315,9 +391,17 @@ const savePost = async (event) => {
     let response;
 
     if (payload.id) {
-      response = await supabase.from(POSTS_TABLE).update(row).eq("id", payload.id).select().single();
+      response = await withTimeout(
+        supabase.from(POSTS_TABLE).update(row).eq("id", payload.id),
+        12000,
+        "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
+      );
     } else {
-      response = await supabase.from(POSTS_TABLE).insert(row).select().single();
+      response = await withTimeout(
+        supabase.from(POSTS_TABLE).insert(row),
+        12000,
+        "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
+      );
     }
 
     if (response.error) {
@@ -325,9 +409,11 @@ const savePost = async (event) => {
       return;
     }
 
-    selectedId = response.data?.id || payload.id || null;
-    setStatus("Yazı kaydedildi.");
+    selectedId = payload.id || null;
+    setStatus("Yazı kaydedildi, liste yenileniyor...");
     await refreshPosts();
+    focusSavedPost(payload);
+    setStatus("Yazı kaydedildi.");
   } catch (error) {
     setStatus(`Beklenmeyen hata: ${error.message || "Kaydetme işlemi tamamlanamadı."}`);
   } finally {
@@ -352,7 +438,11 @@ const deletePost = async () => {
     return;
   }
 
-  const { error } = await supabase.from(POSTS_TABLE).delete().eq("id", payload.id);
+  const { error } = await withTimeout(
+    supabase.from(POSTS_TABLE).delete().eq("id", payload.id),
+    12000,
+    "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
+  );
   if (error) {
     setStatus(`Silme sırasında hata oluştu: ${error.message}`);
     return;
@@ -386,6 +476,8 @@ const setSignedOutState = () => {
   adminApp.classList.add("is-hidden");
   authScreen.classList.remove("is-hidden");
   sessionEmail.textContent = "-";
+  canManagePosts = false;
+  setPermissionState();
   setAuthStatus("Girişten sonra panel açılacak.");
 };
 
@@ -413,14 +505,26 @@ const bootAuth = async () => {
   } = await supabase.auth.getSession();
 
   if (session) {
+    canManagePosts = await checkAdminAccess(session);
     setSignedInState(session);
+    setPermissionState();
     await refreshPosts();
+
+    if (!canManagePosts) {
+      setStatus("Bu hesap şu an yalnızca içerikleri görebilir. Kaydetmek için bu kullanıcıyı blog_admins tablosuna eklemelisin.");
+    }
   }
 
   supabase.auth.onAuthStateChange(async (event, sessionState) => {
     if (sessionState) {
+      canManagePosts = await checkAdminAccess(sessionState);
       setSignedInState(sessionState);
+      setPermissionState();
       await refreshPosts();
+
+      if (!canManagePosts) {
+        setStatus("Bu hesap şu an yalnızca içerikleri görebilir. Kaydetmek için bu kullanıcıyı blog_admins tablosuna eklemelisin.");
+      }
       return;
     }
 
@@ -460,10 +564,16 @@ loginForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  canManagePosts = await checkAdminAccess(data.session);
   setSignedInState(data.session);
+  setPermissionState();
   setAuthStatus("Giriş başarılı.");
   loginForm.reset();
   await refreshPosts();
+
+  if (!canManagePosts) {
+    setStatus("Giriş başarılı, fakat bu kullanıcıda yazma yetkisi yok. Supabase içindeki blog_admins tablosuna bu kullanıcı ID'sini eklemen gerekiyor.");
+  }
 });
 
 signOutButton.addEventListener("click", async () => {
