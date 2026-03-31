@@ -255,12 +255,13 @@ const upsertPostRpc = async (payload, userId) => {
   );
 };
 
-const deletePostRpc = async (postId) => {
+const deletePostRpc = async (postId, userId) => {
   const supabase = getSupabaseClient();
 
   return withTimeout(
     supabase.rpc("delete_blog_post", {
       p_id: postId,
+      p_author_user_id: userId || null,
     }),
     12000,
     "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya SQL fonksiyon kurulumunu kontrol et."
@@ -468,10 +469,15 @@ const deletePost = async () => {
   }
 
   try {
+    const userId = await resolveCurrentUserId();
+    if (!userId) {
+      throw new Error("Kullanıcı bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap.");
+    }
+
     setEditorBusy(true);
     setStatus("Yazı siliniyor...");
 
-    const { error } = await deletePostRpc(payload.id);
+    const { error } = await deletePostRpc(payload.id, userId);
     if (error) {
       if (String(error.message || "").toLowerCase().includes("delete_blog_post")) {
         setStatus("SQL fonksiyonu bulunamadı. Supabase SQL Editor'da yeni patch sorgusunu çalıştır.");
