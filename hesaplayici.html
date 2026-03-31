@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RotaPort Maliyet Hesaplayıcı | İthalat ve İhracat İçin Minimal Planlama Aracı</title>
+    <meta
+      name="description"
+      content="İthalat ve ihracat için toplam maliyet, birim maliyet ve hedef teklif seviyesini gereksiz karmaşa olmadan görmek için hazırlanan minimal RotaPort hesaplayıcı."
+    />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <link rel="canonical" href="https://rotaport.org/hesaplayici.html" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RotaPort" />
+    <meta
+      property="og:title"
+      content="RotaPort Maliyet Hesaplayıcı | İthalat ve İhracat İçin Minimal Planlama Aracı"
+    />
+    <meta
+      property="og:description"
+      content="Toplam maliyet, birim maliyet ve teklif seviyesini birkaç veriyle hızlıca görün."
+    />
+    <meta property="og:url" content="https://rotaport.org/hesaplayici.html" />
+    <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebPage",
+            "@id": "https://rotaport.org/hesaplayici.html#webpage",
+            "url": "https://rotaport.org/hesaplayici.html",
+            "name": "RotaPort Maliyet Hesaplayıcı",
+            "description": "İthalat ve ihracat için toplam maliyet, birim maliyet ve hedef teklif seviyesini hesaplayan minimal planlama aracı.",
+            "inLanguage": "tr-TR"
+          },
+          {
+            "@type": "WebApplication",
+            "name": "RotaPort Maliyet Hesaplayıcı",
+            "applicationCategory": "BusinessApplication",
+            "operatingSystem": "Web",
+            "url": "https://rotaport.org/hesaplayici.html",
+            "description": "İthalat ve ihracat için hızlı maliyet görünürlüğü sağlayan minimal web aracı."
+          }
+        ]
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Sora:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="hesaplayici.css" />
+    <script defer src="script.js"></script>
+    <script defer src="hesaplayici.js"></script>
+  </head>
+  <body data-whatsapp="905318639117">
+    <div class="site-shell">
+      <header class="site-header" id="top">
+        <div class="container header-inner">
+          <a class="brand" href="index.html" aria-label="RotaPort ana sayfa">
+            <span class="brand-mark">RP</span>
+            <span class="brand-text">
+              <strong>RotaPort</strong>
+              <small>Dış Ticaret Danışmanlığı</small>
+            </span>
+          </a>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Menüyü aç"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <nav class="site-nav" id="site-nav" data-open="false">
+            <a href="index.html#hizmetler">Hizmetler</a>
+            <a href="index.html#hakkimizda">Hakkımızda</a>
+            <a href="index.html#riskler">Riskler</a>
+            <a href="hesaplayici.html">Hesaplayıcı</a>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#iletisim" class="button button-nav">30 dk analiz al</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="page-hero calculator-hero">
+          <div class="container calculator-hero-grid">
+            <div class="reveal" style="--delay: 0.05s">
+              <div class="breadcrumbs">
+                <a href="index.html">Ana Sayfa</a>
+                <span>/</span>
+                <span>Hesaplayıcı</span>
+              </div>
+              <p class="eyebrow">Minimal Hesaplayıcı</p>
+              <h1 class="page-title">İthalat ve ihracat maliyetini gereksiz kart olmadan görün</h1>
+              <p class="lead">
+                Bu sayfayı özellikle sade tuttuk. Amaç, çok detaylı operasyon ekranı kurmak
+                değil; toplam maliyetinizi, birim maliyetinizi ve karar verirken bakmanız gereken
+                teklif seviyesini birkaç veriyle hızlıca görmek.
+              </p>
+
+              <div class="calculator-pills">
+                <span>Toplam maliyet</span>
+                <span>Birim maliyet</span>
+                <span>Önerilen fiyat</span>
+              </div>
+            </div>
+
+            <aside class="calculator-note-card reveal" style="--delay: 0.12s">
+              <span class="inline-badge">Kullanım mantığı</span>
+              <p>
+                Bu araç resmi beyan yerine geçmez. Vergi, GTİP ve ülke bazlı gerçek operasyon
+                koşullarını ayrıca doğrulaman gerekir. Ama ilk planlama ve teklif aşamasında ciddi
+                zaman kazandırır.
+              </p>
+              <a class="button button-secondary" href="index.html#iletisim">Sonucu birlikte yorumlayalım</a>
+            </aside>
+          </div>
+        </section>
+
+        <section class="section calculator-section">
+          <div class="container">
+            <div class="calculator-switch reveal is-visible">
+              <button class="calculator-switch-button is-active" type="button" data-mode="import">
+                İthalat
+              </button>
+              <button class="calculator-switch-button" type="button" data-mode="export">
+                İhracat
+              </button>
+            </div>
+
+            <div class="calc-panel is-active" data-calc-panel="import">
+              <div class="calculator-layout">
+                <form class="calculator-card calculator-form reveal is-visible" data-form="import">
+                  <div class="calculator-card-head">
+                    <p class="eyebrow">İthalat Modu</p>
+                    <h2>Toplam maliyet ve birim landed cost</h2>
+                    <p>
+                      Etkili toplam vergi oranını tek alan olarak gir. Bu, hızlı ön planlama için
+                      en sade yaklaşım.
+                    </p>
+                  </div>
+
+                  <div class="calculator-field-grid">
+                    <label class="calculator-field">
+                      <span>Para birimi</span>
+                      <select name="currency">
+                        <option value="USD" selected>USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="CNY">CNY</option>
+                        <option value="GBP">GBP</option>
+                      </select>
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>1 birim ürün fiyatı</span>
+                      <input type="number" name="unitPrice" min="0" step="0.01" value="8.5" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Adet</span>
+                      <input type="number" name="quantity" min="1" step="1" value="1000" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Kur</span>
+                      <input type="number" name="fxRate" min="0.0001" step="0.0001" value="38.5" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Navlun + sigorta</span>
+                      <input type="number" name="shipping" min="0" step="0.01" value="1350" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Etkili toplam vergi %</span>
+                      <input type="number" name="taxRate" min="0" step="0.01" value="32" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Yerel giderler (TRY)</span>
+                      <input type="number" name="localCosts" min="0" step="0.01" value="21000" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Hedef satış marjı %</span>
+                      <input type="number" name="targetMargin" min="0" step="0.01" value="30" />
+                    </label>
+                  </div>
+                </form>
+
+                <aside class="calculator-card calculator-results reveal is-visible">
+                  <div class="calculator-card-head">
+                    <p class="eyebrow">3 Ana Çıktı</p>
+                    <h2>İlk karar için gerekli özet</h2>
+                    <p>Toplam maliyet, birim maliyet ve önerilen satış seviyesi birlikte görünür.</p>
+                  </div>
+
+                  <div class="calculator-results-grid">
+                    <article class="calculator-result-card">
+                      <span>Toplam maliyet</span>
+                      <strong data-output="import-total">-</strong>
+                    </article>
+                    <article class="calculator-result-card">
+                      <span>Birim maliyet</span>
+                      <strong data-output="import-unit">-</strong>
+                    </article>
+                    <article class="calculator-result-card calculator-result-card-accent">
+                      <span>Önerilen satış</span>
+                      <strong data-output="import-target">-</strong>
+                    </article>
+                  </div>
+
+                  <p class="calculator-result-note" data-output="import-note">
+                    Hesap sonucu burada görünecek.
+                  </p>
+                </aside>
+              </div>
+            </div>
+
+            <div class="calc-panel" data-calc-panel="export">
+              <div class="calculator-layout">
+                <form class="calculator-card calculator-form reveal is-visible" data-form="export">
+                  <div class="calculator-card-head">
+                    <p class="eyebrow">İhracat Modu</p>
+                    <h2>Başa baş ve hedef teklif seviyesi</h2>
+                    <p>
+                      Bu görünüm, teklif verirken kârsız kalmamak ve rahat çalışabileceğin seviyeyi
+                      hızlıca görmek için tasarlandı.
+                    </p>
+                  </div>
+
+                  <div class="calculator-field-grid">
+                    <label class="calculator-field">
+                      <span>Teklif para birimi</span>
+                      <select name="currency">
+                        <option value="USD" selected>USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                      </select>
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>1 birim üretim maliyeti (TRY)</span>
+                      <input type="number" name="unitCostTry" min="0" step="0.01" value="115" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Adet</span>
+                      <input type="number" name="quantity" min="1" step="1" value="1000" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Teklif kuru</span>
+                      <input type="number" name="fxRate" min="0.0001" step="0.0001" value="38.5" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Toplam ek gider (TRY)</span>
+                      <input type="number" name="extraCosts" min="0" step="0.01" value="23500" />
+                    </label>
+
+                    <label class="calculator-field">
+                      <span>Komisyon %</span>
+                      <input type="number" name="commissionRate" min="0" step="0.01" value="3" />
+                    </label>
+
+                    <label class="calculator-field calculator-field-wide">
+                      <span>Hedef kâr marjı %</span>
+                      <input type="number" name="targetMargin" min="0" step="0.01" value="22" />
+                    </label>
+                  </div>
+                </form>
+
+                <aside class="calculator-card calculator-results reveal is-visible">
+                  <div class="calculator-card-head">
+                    <p class="eyebrow">3 Ana Çıktı</p>
+                    <h2>Teklif öncesi sade özet</h2>
+                    <p>Önce başa baş seviyesi, sonra hedef teklif; gerisi ikinci aşama detaydır.</p>
+                  </div>
+
+                  <div class="calculator-results-grid">
+                    <article class="calculator-result-card">
+                      <span>Toplam maliyet</span>
+                      <strong data-output="export-total">-</strong>
+                    </article>
+                    <article class="calculator-result-card">
+                      <span>Başa baş teklif</span>
+                      <strong data-output="export-breakeven">-</strong>
+                    </article>
+                    <article class="calculator-result-card calculator-result-card-accent">
+                      <span>Önerilen teklif</span>
+                      <strong data-output="export-target">-</strong>
+                    </article>
+                  </div>
+
+                  <p class="calculator-result-note" data-output="export-note">
+                    Hesap sonucu burada görünecek.
+                  </p>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="container footer-inner">
+          <div>
+            <strong>RotaPort</strong>
+            <p>Dış ticaret süreçleri için netlik, hız ve daha kontrollü karar zemini.</p>
+          </div>
+
+          <div class="footer-links">
+            <a href="index.html">Ana Sayfa</a>
+            <a href="index.html#hizmetler">Hizmetler</a>
+            <a href="index.html#riskler">Riskler</a>
+            <a href="hesaplayici.html">Hesaplayıcı</a>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#iletisim">İletişim</a>
+          </div>
+
+          <p>© <span id="year"></span> RotaPort. Tüm hakları saklıdır.</p>
+        </div>
+      </footer>
+
+      <a
+        class="whatsapp-fab js-whatsapp-link"
+        href="index.html#iletisim"
+        data-whatsapp-message="Merhaba, maliyet hesaplayıcıdaki sonucu birlikte değerlendirmek istiyorum."
+        aria-label="WhatsApp ile iletişim kur"
+      >
+        WhatsApp
+      </a>
+    </div>
+  </body>
+</html>
