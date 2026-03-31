@@ -32,6 +32,8 @@ let posts = [];
 let selectedId = null;
 let supabaseClient = null;
 let canManagePosts = false;
+let currentSession = null;
+let currentUserId = null;
 
 const withTimeout = async (promise, timeoutMs, message) => {
   let timeoutId;
@@ -378,17 +380,14 @@ const savePost = async (event) => {
 
     payload.slug = payload.slug || slugify(payload.title);
     setEditorBusy(true);
-    setStatus("Oturum doğrulanıyor...");
+    setStatus("Kullanıcı doğrulanıyor...");
 
-    const {
-      data: { session },
-    } = await withTimeout(
-      supabase.auth.getSession(),
-      8000,
-      "Oturum bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap."
-    );
+    const userId = await resolveCurrentUserId();
+    if (!userId) {
+      throw new Error("Kullanıcı bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap.");
+    }
 
-    const row = mapPayloadToRow(payload, session?.user?.id);
+    const row = mapPayloadToRow(payload, userId);
     let response;
     setStatus("Veritabanına yazılıyor...");
 
@@ -486,18 +485,46 @@ const insertSnippet = (snippet) => {
 };
 
 const setSignedInState = (session) => {
+  currentSession = session || null;
+  currentUserId = session?.user?.id || null;
   authScreen.classList.add("is-hidden");
   adminApp.classList.remove("is-hidden");
   sessionEmail.textContent = session?.user?.email || "Giriş yapıldı";
 };
 
 const setSignedOutState = () => {
+  currentSession = null;
+  currentUserId = null;
   adminApp.classList.add("is-hidden");
   authScreen.classList.remove("is-hidden");
   sessionEmail.textContent = "-";
   canManagePosts = false;
   setPermissionState();
   setAuthStatus("Girişten sonra panel açılacak.");
+};
+
+const resolveCurrentUserId = async () => {
+  if (currentUserId) {
+    return currentUserId;
+  }
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
+  const { data, error } = await withTimeout(
+    supabase.auth.getUser(),
+    8000,
+    "Kullanıcı bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap."
+  );
+
+  if (error) {
+    throw error;
+  }
+
+  currentUserId = data?.user?.id || null;
+  return currentUserId;
 };
 
 const bootAuth = async () => {
@@ -521,7 +548,11 @@ const bootAuth = async () => {
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await withTimeout(
+    supabase.auth.getSession(),
+    8000,
+    "Oturum bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap."
+  );
 
   if (session) {
     canManagePosts = await checkAdminAccess(session);
