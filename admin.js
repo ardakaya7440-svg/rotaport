@@ -232,6 +232,41 @@ const mapPayloadToRow = (payload, userId) => ({
   author_user_id: userId || null,
 });
 
+const upsertPostRpc = async (payload, userId) => {
+  const supabase = getSupabaseClient();
+
+  return withTimeout(
+    supabase.rpc("upsert_blog_post", {
+      p_id: payload.id || null,
+      p_title: payload.title,
+      p_slug: payload.slug,
+      p_category: payload.category || "RotaPort Blog",
+      p_read_time: payload.readTime,
+      p_published_date: payload.date || null,
+      p_excerpt: payload.excerpt || "",
+      p_points: payload.points || [],
+      p_legacy_url: payload.legacyUrl || "",
+      p_body_html: payload.bodyHtml || "",
+      p_status: payload.status === "published" ? "published" : "draft",
+      p_author_user_id: userId || null,
+    }),
+    12000,
+    "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya SQL fonksiyon kurulumunu kontrol et."
+  );
+};
+
+const deletePostRpc = async (postId) => {
+  const supabase = getSupabaseClient();
+
+  return withTimeout(
+    supabase.rpc("delete_blog_post", {
+      p_id: postId,
+    }),
+    12000,
+    "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya SQL fonksiyon kurulumunu kontrol et."
+  );
+};
+
 const fillForm = (post) => {
   formEl.elements.id.value = post.id || "";
   formEl.elements.status.value = post.status || "draft";
@@ -387,30 +422,19 @@ const savePost = async (event) => {
       throw new Error("Kullanıcı bilgisi alınamadı. Sayfayı yenileyip tekrar giriş yap.");
     }
 
-    const row = mapPayloadToRow(payload, userId);
-    let response;
     setStatus("Veritabanına yazılıyor...");
-
-    if (payload.id) {
-      response = await withTimeout(
-        supabase.from(POSTS_TABLE).update(row).eq("id", payload.id),
-        12000,
-        "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
-      );
-    } else {
-      response = await withTimeout(
-        supabase.from(POSTS_TABLE).insert(row),
-        12000,
-        "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
-      );
-    }
+    const response = await upsertPostRpc(payload, userId);
 
     if (response.error) {
+      if (String(response.error.message || "").toLowerCase().includes("upsert_blog_post")) {
+        setStatus("SQL fonksiyonu bulunamadı. Supabase SQL Editor'da yeni patch sorgusunu çalıştır.");
+        return;
+      }
       setStatus(`Kaydetme sırasında hata oluştu: ${response.error.message}`);
       return;
     }
 
-    selectedId = payload.id || null;
+    selectedId = response.data || payload.id || null;
     setStatus("Yazı kaydedildi, liste yenileniyor...");
     await withTimeout(
       refreshPosts(),
@@ -447,12 +471,12 @@ const deletePost = async () => {
     setEditorBusy(true);
     setStatus("Yazı siliniyor...");
 
-    const { error } = await withTimeout(
-      supabase.from(POSTS_TABLE).delete().eq("id", payload.id),
-      12000,
-      "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya RLS kurallarını kontrol et."
-    );
+    const { error } = await deletePostRpc(payload.id);
     if (error) {
+      if (String(error.message || "").toLowerCase().includes("delete_blog_post")) {
+        setStatus("SQL fonksiyonu bulunamadı. Supabase SQL Editor'da yeni patch sorgusunu çalıştır.");
+        return;
+      }
       setStatus(`Silme sırasında hata oluştu: ${error.message}`);
       return;
     }
