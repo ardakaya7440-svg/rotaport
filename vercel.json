@@ -1,0 +1,36 @@
+{
+  "rewrites": [
+    {
+      "source": "/hesaplayici",
+      "destination": "/hesaplayici.html"
+    },
+    {
+      "source": "/hesaplayici/",
+      "destination": "/hesaplayici.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/blog/",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/post",
+      "destination": "/post.html"
+    },
+    {
+      "source": "/post/",
+      "destination": "/post.html"
+    }
+  ]
+}
