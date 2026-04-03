@@ -232,11 +232,123 @@ const mapPayloadToRow = (payload, userId) => ({
   author_user_id: userId || null,
 });
 
-const upsertPostRpc = async (payload, userId) => {
-  const supabase = getSupabaseClient();
+const resolveAccessToken = async () => {
+  if (currentSession?.access_token) {
+    return currentSession.access_token;
+  }
 
-  return withTimeout(
-    supabase.rpc("upsert_blog_post", {
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    return null;
+  }
+
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error) {
+    throw error;
+  }
+
+  currentSession = session || null;
+  currentUserId = session?.user?.id || currentUserId;
+  return session?.access_token || null;
+};
+
+const parseRpcResponse = (rawText) => {
+  if (!rawText) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawText);
+  } catch {
+    return rawText;
+  }
+};
+
+const extractRpcErrorMessage = (payload, fallbackMessage) => {
+  if (!payload) {
+    return fallbackMessage;
+  }
+
+  if (typeof payload === "string") {
+    return payload;
+  }
+
+  return payload.message || payload.error_description || payload.error || payload.details || fallbackMessage;
+};
+
+const callRpc = async (functionName, payload, timeoutMessage) => {
+  const accessToken = await resolveAccessToken();
+
+  if (!accessToken) {
+    return {
+      data: null,
+      error: {
+        message: "Oturum erişim anahtarı alınamadı. Sayfayı yenileyip tekrar giriş yap.",
+      },
+    };
+  }
+
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+
+  try {
+    const response = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/rpc/${functionName}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        apikey: SUPABASE_CONFIG.anonKey,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    const rawText = await response.text();
+    const parsed = parseRpcResponse(rawText);
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: {
+          message: extractRpcErrorMessage(parsed, `${functionName} çağrısı başarısız oldu.`),
+        },
+      };
+    }
+
+    return {
+      data: parsed,
+      error: null,
+    };
+  } catch (error) {
+    if (error.name === "AbortError") {
+      return {
+        data: null,
+        error: {
+          message: timeoutMessage,
+        },
+      };
+    }
+
+    return {
+      data: null,
+      error: {
+        message: error.message || `${functionName} çağrısı başarısız oldu.`,
+      },
+    };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+};
+
+const upsertPostRpc = async (payload, userId) => {
+  return callRpc(
+    "upsert_blog_post",
+    {
       p_id: payload.id || null,
       p_title: payload.title,
       p_slug: payload.slug,
@@ -249,21 +361,18 @@ const upsertPostRpc = async (payload, userId) => {
       p_body_html: payload.bodyHtml || "",
       p_status: payload.status === "published" ? "published" : "draft",
       p_author_user_id: userId || null,
-    }),
-    12000,
+    },
     "Kayıt isteği zaman aşımına uğradı. Supabase bağlantısını veya SQL fonksiyon kurulumunu kontrol et."
   );
 };
 
 const deletePostRpc = async (postId, userId) => {
-  const supabase = getSupabaseClient();
-
-  return withTimeout(
-    supabase.rpc("delete_blog_post", {
+  return callRpc(
+    "delete_blog_post",
+    {
       p_id: postId,
       p_author_user_id: userId || null,
-    }),
-    12000,
+    },
     "Silme isteği zaman aşımına uğradı. Supabase bağlantısını veya SQL fonksiyon kurulumunu kontrol et."
   );
 };
