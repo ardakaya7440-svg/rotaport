@@ -114,18 +114,21 @@ img {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
-  width: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
   aspect-ratio: 1;
-  border-radius: 16px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #08131e;
-  background:
-    linear-gradient(135deg, var(--accent-strong), #f8dfab),
-    linear-gradient(135deg, #fff, #fff);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.brand-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .brand-text {
